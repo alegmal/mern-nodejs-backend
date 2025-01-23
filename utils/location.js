@@ -1,5 +1,5 @@
 const axios = require('axios');
-const HttpError = require('../modules/http-error');
+const HttpError = require('../models/http-error');
 
 function getCoordsForAddress(address) {
   return {

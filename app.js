@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const placesRoutes = require('./routes/places-routes');
 const usersRoutes = require('./routes/users-routes');
-const HttpError = require('./modules/http-error');
+const HttpError = require('./models/http-error');
 const { error } = require('console');
 
 const app = express();
@@ -28,8 +28,13 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || 'An unknown error occured' });
 });
 
+const clientOptions = {
+  serverApi: { version: '1', strict: true, deprecationErrors: true },
+};
+const uri =
+  `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.3fepk.mongodb.net/places?retryWrites=true&w=majority&appName=Cluster0`;
 mongoose
-  .connect()
+  .connect(uri, clientOptions)
   .then(() => {
     app.listen(5000);
   })
