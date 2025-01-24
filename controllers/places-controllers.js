@@ -2,6 +2,7 @@ const HttpError = require('../models/http-error');
 const { v4: uuidv4 } = require('uuid');
 const { validationResult } = require('express-validator');
 const getCoordsForAddress = require('../utils/location');
+const Place = require('../models/place');
 
 let DUMMY_PLACES = [
   {
@@ -55,23 +56,31 @@ const getPlacesByUserId = (req, res, next) => {
   res.json(places);
 };
 
-const createPlace = (req, res, next) => {
+const createPlace = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new HttpError('Invalid inputs passed, please check your data.', 422);
+    return next(
+      new HttpError('Invalid inputs passed, please check your data.', 422)
+    );
   }
 
   const { title, description, address, creator } = req.body;
-  const createdPlace = {
-    id: uuidv4(),
+  const createdPlace = new Place({
     title,
     description,
-    location: getCoordsForAddress(address),
     address,
+    location: getCoordsForAddress(address),
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/View_of_Empire_State_Building_from_Rockefeller_Center_New_York_City_dllu_Cropped.jpg/320px-View_of_Empire_State_Building_from_Rockefeller_Center_New_York_City_dllu_Cropped.jpg',
     creator,
-  };
+  });
 
-  DUMMY_PLACES.push(createdPlace);
+  try {
+    await createdPlace.save();
+  } catch (err) {
+    return next(new HttpError(`Something went wrong... ${err}`, 500));
+  }
+
   res.status(201).json({ place: createdPlace });
 };
 

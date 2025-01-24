@@ -36,6 +36,7 @@ const uri =
 mongoose
   .connect(uri, clientOptions)
   .then(() => {
+    console.log("starting server...")
     app.listen(5000);
   })
   .catch((err) => {
