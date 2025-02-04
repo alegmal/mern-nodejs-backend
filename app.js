@@ -32,7 +32,7 @@ const clientOptions = {
   serverApi: { version: '1', strict: true, deprecationErrors: true },
 };
 const uri =
-  `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.3fepk.mongodb.net/places?retryWrites=true&w=majority&appName=Cluster0`;
+  `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.3fepk.mongodb.net/mern?retryWrites=true&w=majority&appName=Cluster0`;
 mongoose
   .connect(uri, clientOptions)
   .then(() => {
